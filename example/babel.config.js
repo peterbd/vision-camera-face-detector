@@ -10,6 +10,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
           [pak.name]: path.join(__dirname, '..', pak.source),
+          'vision-camera-face-detector': '../src/index',
         },
       },
     ],

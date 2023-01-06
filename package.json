@@ -1,5 +1,5 @@
 {
-  "name": "vision-camera-face-detector",
+  "name": "@mat2718/vision-camera-face-detector",
   "version": "0.1.8",
   "description": "VisionCamera Frame Processor Plugin to detect faces using MLKit Vision Face Detector",
   "main": "lib/commonjs/index",
@@ -13,19 +13,19 @@
     "android",
     "ios",
     "cpp",
-    "vision-camera-face-detector.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
+    "vision-camera-face-detector.podspec"
   ],
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "prepare": "bob build",
+    "prepublishOnly": "yarn lint",
+    "preversion": "yarn lint",
+    "version": "yarn format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "npmPublish": "yarn version patch && yarn publish",
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
@@ -36,14 +36,15 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/rodgomesc/vision-camera-face-detector",
-  "author": "Rodrigo gomes <rodgomesc@gmail.com> (https://github.com/rodgomesc)",
+  "repository": "https://github.com/mat2718/vision-camera-face-detector",
+  "author": "Matthew Terry <matthewterry68.mt@gmail.com> (https://github.com/mat2718)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rodgomesc/vision-camera-face-detector/issues"
+    "url": "https://github.com/mat2718/vision-camera-face-detector/issues"
   },
-  "homepage": "https://github.com/rodgomesc/vision-camera-face-detector#readme",
+  "homepage": "https://github.com/mat2718/vision-camera-face-detector#readme",
   "publishConfig": {
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
@@ -80,36 +81,6 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/"
-  ],
-  "prettier": {
-    "quoteProps": "consistent",
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
   },
   "react-native-builder-bob": {
     "source": "src",
