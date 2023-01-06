@@ -110,7 +110,6 @@ export const faceBoundsAdjustToView =
     : (
         frame: Dimensions,
         view: Dimensions,
-        landscape: boolean,
         verticalCropPadding: number,
         horizontalCropPadding: number,
       ) => {
