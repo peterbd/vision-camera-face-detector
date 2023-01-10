@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {runOnJS} from 'react-native-reanimated';
 
 import {
   Platform,
@@ -15,14 +14,15 @@ import {
   useFrameProcessor,
 } from 'react-native-vision-camera';
 
-import {Camera} from 'react-native-vision-camera';
 import {
   Dimensions,
   Face,
   faceBoundsAdjustToView,
   scanFaces,
   sortFormatsByResolution,
-} from 'vision-camera-face-detector';
+} from '@mat2718/vision-camera-face-detector';
+import {runOnJS} from 'react-native-reanimated';
+import {Camera} from 'react-native-vision-camera';
 
 const App = () => {
   //*****************************************************************************************
@@ -32,7 +32,7 @@ const App = () => {
   const [hasPermission, setHasPermission] = React.useState(false);
   // camera states
   const devices = useCameraDevices();
-  const direction: 'front' | 'back' = 'front';
+  let direction: 'front' | 'back' = 'back';
   const device = devices[direction];
   const camera = useRef<Camera>(null);
   const [faces, setFaces] = useState<Face[]>([]);
@@ -94,6 +94,7 @@ const App = () => {
     frame => {
       'worklet';
       const scannedFaces = scanFaces(frame);
+      console.log('scannedfaces: ', scannedFaces);
       runOnJS(handleScan)(frame, scannedFaces);
     },
     [handleScan],
@@ -139,6 +140,31 @@ const App = () => {
       borderColor: 'yellow',
       position: 'absolute',
     },
+    crossSectionContainer: {
+      height: 15,
+      width: 15,
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      top: screenHeight / 2,
+      left: screenWidth / 2,
+    },
+    verticalCrossHair: {
+      height: '100%',
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: 'yellow',
+      borderWidth: 1,
+    },
+    horizontalCrossHair: {
+      width: '100%',
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: 'yellow',
+      borderWidth: 1,
+    },
   });
 
   //********************************************************************
@@ -159,6 +185,10 @@ const App = () => {
         audio={false}
         format={format}
       />
+      <View style={styles.crossSectionContainer}>
+        <View style={styles.verticalCrossHair} />
+        <View style={styles.horizontalCrossHair} />
+      </View>
       <View style={boundingStyle} testID="faceDetectionBoxView">
         {frameDimensions &&
           (() => {

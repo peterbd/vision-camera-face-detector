@@ -9,3 +9,5 @@ ios/build
 **/__tests__
 **/__fixtures__
 **/__mocks__
+docs/
+betaExample/

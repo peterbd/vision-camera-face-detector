@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "vision-camera-face-detector": ["./src/index"]
+      "@mat2718/vision-camera-face-detector": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

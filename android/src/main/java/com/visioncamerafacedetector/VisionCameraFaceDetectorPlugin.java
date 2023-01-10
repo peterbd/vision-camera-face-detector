@@ -33,12 +33,14 @@ import java.util.List;
 
 
 public class VisionCameraFaceDetectorPlugin extends FrameProcessorPlugin {
+  private static final String TAG = "VisionCameraFaceDetectorPlugin";
 
   FaceDetectorOptions options =
     new FaceDetectorOptions.Builder()
-      .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-      .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
+      .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+      // .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
       .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+      .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
       .setMinFaceSize(0.15f)
       .build();
 
@@ -51,71 +53,73 @@ public class VisionCameraFaceDetectorPlugin extends FrameProcessorPlugin {
     bounds.putDouble("y", boundingBox.centerY());
     bounds.putDouble("top", boundingBox.top);
     bounds.putDouble("left", boundingBox.left);
+    bounds.putDouble("right", boundingBox.right);
+    bounds.putDouble("bottom", boundingBox.bottom);
     bounds.putDouble("width", boundingBox.width());
     bounds.putDouble("height", boundingBox.height());
 
     return bounds;
   }
 
-  private WritableMap  processFaceContours(Face face) {
-    // All faceContours
-    int[] faceContoursTypes =
-      new int[] {
-        FaceContour.FACE,
-        FaceContour.LEFT_EYEBROW_TOP,
-        FaceContour.LEFT_EYEBROW_BOTTOM,
-        FaceContour.RIGHT_EYEBROW_TOP,
-        FaceContour.RIGHT_EYEBROW_BOTTOM,
-        FaceContour.LEFT_EYE,
-        FaceContour.RIGHT_EYE,
-        FaceContour.UPPER_LIP_TOP,
-        FaceContour.UPPER_LIP_BOTTOM,
-        FaceContour.LOWER_LIP_TOP,
-        FaceContour.LOWER_LIP_BOTTOM,
-        FaceContour.NOSE_BRIDGE,
-        FaceContour.NOSE_BOTTOM,
-        FaceContour.LEFT_CHEEK,
-        FaceContour.RIGHT_CHEEK
-      };
+  // private WritableMap  processFaceContours(Face face) {
+  //   // All faceContours
+  //   int[] faceContoursTypes =
+  //     new int[] {
+  //       FaceContour.FACE,
+  //       FaceContour.LEFT_CHEEK,
+  //       FaceContour.LEFT_EYE,
+  //       FaceContour.LEFT_EYEBROW_BOTTOM,
+  //       FaceContour.LEFT_EYEBROW_TOP,
+  //       FaceContour.LOWER_LIP_BOTTOM,
+  //       FaceContour.LOWER_LIP_TOP,
+  //       FaceContour.NOSE_BOTTOM,
+  //       FaceContour.NOSE_BRIDGE,
+  //       FaceContour.RIGHT_CHEEK,
+  //       FaceContour.RIGHT_EYE,
+  //       FaceContour.RIGHT_EYEBROW_BOTTOM,
+  //       FaceContour.RIGHT_EYEBROW_TOP,
+  //       FaceContour.UPPER_LIP_BOTTOM,
+  //       FaceContour.UPPER_LIP_TOP
+  //     };
 
-    String[] faceContoursTypesStrings = {
-        "FACE",
-        "LEFT_EYEBROW_TOP",
-        "LEFT_EYEBROW_BOTTOM",
-        "RIGHT_EYEBROW_TOP",
-        "RIGHT_EYEBROW_BOTTOM",
-        "LEFT_EYE",
-        "RIGHT_EYE",
-        "UPPER_LIP_TOP",
-        "UPPER_LIP_BOTTOM",
-        "LOWER_LIP_TOP",
-        "LOWER_LIP_BOTTOM",
-        "NOSE_BRIDGE",
-        "NOSE_BOTTOM",
-        "LEFT_CHEEK",
-        "RIGHT_CHEEK"
-      };
+  //   String[] faceContoursTypesStrings = {
+  //       "FACE",
+  //       "LEFT_CHEEK",
+  //       "LEFT_EYE",
+  //       "LEFT_EYEBROW_BOTTOM",
+  //       "LEFT_EYEBROW_TOP",
+  //       "LOWER_LIP_BOTTOM",
+  //       "LOWER_LIP_TOP",
+  //       "NOSE_BOTTOM",
+  //       "NOSE_BRIDGE",
+  //       "RIGHT_CHEEK",
+  //       "RIGHT_EYE",
+  //       "RIGHT_EYEBROW_BOTTOM",
+  //       "RIGHT_EYEBROW_TOP",
+  //       "UPPER_LIP_BOTTOM",
+  //       "UPPER_LIP_TOP"
+  //     };
 
-    WritableMap faceContoursTypesMap = new WritableNativeMap();
+  //   WritableMap faceContoursTypesMap = new WritableNativeMap();
 
-      for (int i = 0; i < faceContoursTypesStrings.length; i++) {
-        FaceContour contour = face.getContour(faceContoursTypes[i]);
-        List<PointF> points = contour.getPoints();
-        WritableNativeArray pointsArray = new WritableNativeArray();
+  //     for (int i = 0; i < faceContoursTypesStrings.length; i++) {
+  //       FaceContour contour = face.getContour(FaceContour.LEFT_EYE);
+  //       List<PointF> points = contour.getPoints();
+  //       WritableNativeArray pointsArray = new WritableNativeArray();
 
-          for (int j = 0; j < points.size(); j++) {
-            WritableMap currentPointsMap = new WritableNativeMap();
+  //         for (int j = 0; j < points.size(); j++) {
+  //           WritableMap currentPointsMap = new WritableNativeMap();
 
-            currentPointsMap.putDouble("x", points.get(j).x);
-            currentPointsMap.putDouble("y", points.get(j).y);
+  //           currentPointsMap.putDouble("x", points.get(j).x);
+  //           currentPointsMap.putDouble("y", points.get(j).y);
 
-            pointsArray.pushMap(currentPointsMap);
-          }
-          faceContoursTypesMap.putArray(faceContoursTypesStrings[contour.getFaceContourType() - 1], pointsArray);
-      }
+  //           pointsArray.pushMap(currentPointsMap);
+  //         }
+  //         faceContoursTypesMap.putArray(faceContoursTypesStrings[contour.getFaceContourType() - 1], pointsArray);
+  //     }
 
-    return faceContoursTypesMap;
-  }
+  //   return faceContoursTypesMap;
+  // }
 
   @SuppressLint("NewApi")
   @Override
@@ -129,8 +133,10 @@ public class VisionCameraFaceDetectorPlugin extends FrameProcessorPlugin {
       WritableNativeArray array = new WritableNativeArray();
       try {
         List<Face> faces = Tasks.await(task);
+        Log.d(TAG, "Faces: " + faces);
         for (Face face : faces) {
           WritableMap map =  new WritableNativeMap();
+          Log.d(TAG, "Face: " + face);
 
           map.putDouble("rollAngle", face.getHeadEulerAngleZ()); // Head is rotated to the left rotZ degrees
           map.putDouble("pitchAngle", face.getHeadEulerAngleX()); // Head is rotated to the right rotX degrees
@@ -140,17 +146,19 @@ public class VisionCameraFaceDetectorPlugin extends FrameProcessorPlugin {
           map.putDouble("smilingProbability", face.getSmilingProbability());
           
 
-          WritableMap contours = processFaceContours(face);
+          // WritableMap contours = processFaceContours(face);
           WritableMap bounds = processBoundingBox(face.getBoundingBox());
 
           map.putMap("bounds", bounds);
-          map.putMap("contours", contours);
+          // map.putMap("contours", contours);
 
           array.pushMap(map);
         }
+        Log.d(TAG, "callback: " + array.toString());
         return array;
       } catch (Exception e) {
-        e.printStackTrace();
+        Log.e(TAG, "Exception: " + e.getMessage());
+        return e.getMessage();
       }
     }
 
