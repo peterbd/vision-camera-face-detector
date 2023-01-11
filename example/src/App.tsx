@@ -17,12 +17,12 @@ import {
 import {
   Dimensions,
   Face,
-  faceBoundsAdjustToView,
   scanFaces,
   sortFormatsByResolution,
 } from '@mat2718/vision-camera-face-detector';
 import {runOnJS} from 'react-native-reanimated';
 import {Camera} from 'react-native-vision-camera';
+import {faceBoundsAdjustToView} from './faceBoundsAdjustToView';
 
 const App = () => {
   //*****************************************************************************************
@@ -94,7 +94,6 @@ const App = () => {
     frame => {
       'worklet';
       const scannedFaces = scanFaces(frame);
-      console.log('scannedfaces: ', scannedFaces);
       runOnJS(handleScan)(frame, scannedFaces);
     },
     [handleScan],
@@ -119,7 +118,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    console.log(faces);
+    // console.log(faces);
   }, [faces]);
 
   useEffect(() => {
@@ -200,8 +199,8 @@ const App = () => {
                 height: landscapeMode ? screenWidth : screenHeight,
               },
               landscapeMode,
-              20,
-              20,
+              0,
+              0,
             );
             return faces
               ? faces.map((i, index) => {

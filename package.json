@@ -39,7 +39,7 @@
     "face-detector",
     "mlkit"
   ],
-  "repository": "https://github.com/mat2718/vision-camera-face-detector",
+  "repository": "https://github.com/mat2718/vision-camera-face-detector.git",
   "author": "Matthew Terry <matthewterry68.mt@gmail.com> (https://github.com/mat2718)",
   "license": "MIT",
   "bugs": {
