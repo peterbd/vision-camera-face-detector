@@ -324,7 +324,7 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
           cameraProps?.onFrameProcessorPerformanceSuggestionAvailable
         }
         frameProcessor={cameraProps?.frameProcessor ?? frameProcessor}
-        frameProcessorFps={10}
+        frameProcessorFps={cameraProps?.frameProcessorFps ?? 10}
       />
       <View style={boundingStyle} testID="faceDetectionBoxView">
         {frameDimensions &&

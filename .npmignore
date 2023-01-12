@@ -1,7 +1,9 @@
 src
 tsconfig.json
 tslint.json
-.prettierrc
+.prettierrc.js
+.eslintrc.js
+.github/
 example/
 lib/typescript/example
 android/build
@@ -11,3 +13,5 @@ ios/build
 **/__mocks__
 docs/
 betaExample/
+scripts/
+.vscode/

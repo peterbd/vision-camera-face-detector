@@ -32,7 +32,7 @@ export const findClosest = (arr: Face[], x: number, y: number) => {
   return arr
     .sort((a, b) => {
       const distanceA = Math.abs(a.bounds.x - x) + Math.abs(a.bounds.y - y);
-      const distanceB = Math.abs(b.bounds.x - x) + Math.abs(a.bounds.y - y);
+      const distanceB = Math.abs(b.bounds.x - x) + Math.abs(b.bounds.y - y);
       if (distanceA === distanceB) {
         return a.bounds.x - b.bounds.x;
       }

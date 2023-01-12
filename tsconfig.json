@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@mat2718/vision-camera-face-detector": ["./src/index"]
     },

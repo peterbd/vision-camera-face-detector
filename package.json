@@ -17,19 +17,14 @@
   ],
   "scripts": {
     "test": "jest",
-    "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\" --fix",
-    "prepare": "bob build",
-    "prepublishOnly": "yarn lint",
-    "preversion": "yarn lint",
-    "version": "yarn format && git add -A src",
-    "postversion": "git push && git push --tags",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "npmPublish": "yarn version patch && yarn publish",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepack": "bob build",
     "release": "release-it",
-    "example": "yarn --cwd ./example",
-    "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "example": "yarn --cwd example",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "bootstrap": "yarn example && yarn install && yarn example pods",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
   },
   "keywords": [
     "react-native",
@@ -85,6 +80,23 @@
       "<rootDir>/betaExample/node_modules",
       "<rootDir>/lib/"
     ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
   },
   "react-native-builder-bob": {
     "source": "src",
