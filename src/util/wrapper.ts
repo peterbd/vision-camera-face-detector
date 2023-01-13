@@ -1,5 +1,5 @@
 import type {Frame} from 'react-native-vision-camera';
-import type {Face} from 'src/types/types';
+import type {Face} from '../types/types';
 
 /**
  * It takes a frame, and returns an array of faces

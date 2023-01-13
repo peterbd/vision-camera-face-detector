@@ -26,7 +26,7 @@ yarn add @mat2718/vision-camera-face-detector
 
 ### Configure
 
-Add the below plugin to your babel config file
+### Add the below plugin to your babel config file
 
 ```js
 // babel.config.js
@@ -41,6 +41,14 @@ module.exports = {
   ],
 };
 ```
+
+### Add the following permission to the AndroidManifest.xml located at ~/android/app/src/AndroidManifest.xml
+
+```xml
+<uses-permission android:name="android.permission.CAMERA"/>
+```
+
+---
 
 ## Basic Usage
 

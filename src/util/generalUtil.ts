@@ -1,5 +1,5 @@
 import type {CameraDeviceFormat} from 'react-native-vision-camera';
-import type {Face} from 'src/types/types';
+import type {Face} from '../types/types';
 
 /**
  * Sort the camera formats by resolution, with the highest resolution first.
