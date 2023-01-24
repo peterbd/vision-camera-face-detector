@@ -17,12 +17,12 @@ import {
 import {
   Dimensions,
   Face,
+  faceBoundsAdjustToView,
   scanFaces,
   sortFormatsByResolution,
 } from '@mat2718/vision-camera-face-detector';
 import {runOnJS} from 'react-native-reanimated';
 import {Camera} from 'react-native-vision-camera';
-import {faceBoundsAdjustToView} from './faceBoundsAdjustToView';
 
 const App = () => {
   //*****************************************************************************************
@@ -195,12 +195,12 @@ const App = () => {
             const {adjustRect} = faceBoundsAdjustToView(
               frameDimensions,
               {
-                width: landscapeMode ? screenHeight : screenWidth,
-                height: landscapeMode ? screenWidth : screenHeight,
+                width: screenWidth,
+                height: screenHeight,
               },
               landscapeMode,
-              0,
-              0,
+              50,
+              50,
             );
             return faces
               ? faces.map((i, index) => {

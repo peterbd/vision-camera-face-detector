@@ -31,52 +31,40 @@ export const faceBoundsAdjustToView =
     : (
         frame: Dimensions,
         view: Dimensions,
-        landscape?: boolean,
+        landscape: boolean,
         verticalPadding?: number,
         horizontalPadding?: number,
       ) => {
-        'worklet';
+        // settings up the variables
         const {width, height} = view;
-        /* Calculating the aspect ratio of the view. */
-        const aspectRatio = width / height;
-        const frameWidth = frame.width;
-        const frameHeight = frame.height;
-        const frameAspectRatio = frameWidth / frameHeight;
-
-        /* Setting the widthRatio, heightRatio, offsetX, and offsetY to 0. */
+        const {width: frameWidth, height: frameHeight} = frame;
+        let aspectRatio: number;
         let widthRatio: number;
         let heightRatio: number;
         let offsetX = 0;
         let offsetY = 0;
-        const verticalCropPadding = verticalPadding || 0;
-        const horizontalCropPadding = horizontalPadding || 0;
-
-        // /* Calculating the ratio of the frame to the view. */
+        const topPadding = verticalPadding ? verticalPadding / 2 : 0;
+        const leftPadding = horizontalPadding ? horizontalPadding / 2 : 0;
+        const verticalCropPadding = verticalPadding ?? 0;
+        const horizontalCropPadding = horizontalPadding ?? 0;
 
         if (!landscape) {
-          if (frameAspectRatio < aspectRatio) {
-            widthRatio = width / frameWidth;
-            const croppedFrameHeight = aspectRatio * frameWidth;
-            offsetY = (frameHeight - croppedFrameHeight) / 2;
-            heightRatio = height / croppedFrameHeight;
-          } else {
-            heightRatio = height / frameHeight;
-            const croppedFrameWidth = aspectRatio * frameHeight;
-            offsetX = (frameWidth - croppedFrameWidth) / 2;
-            widthRatio = width / croppedFrameWidth;
-          }
-        } else {
-          const croppedFrameWidth = aspectRatio * frameHeight;
-          const croppedFrameHeight = aspectRatio * frameWidth;
-          if (!landscape) {
-            offsetX = (frameWidth - croppedFrameWidth) / 2;
-          } else {
-            offsetY = (frameHeight - croppedFrameHeight) / 2;
-          }
+          // portrait
+          /* Calculating the aspect ratio of the view. */
+          aspectRatio = width / height;
           heightRatio = height / frameHeight;
+          const croppedFrameWidth = aspectRatio * frameHeight;
+          offsetX = (frameWidth - croppedFrameWidth) / 2;
           widthRatio = width / croppedFrameWidth;
+        } else {
+          // landscape
+          /* Calculating the aspect ratio of the view. */
+          aspectRatio = height / width;
+          widthRatio = width / frameWidth;
+          const croppedFrameHeight = aspectRatio * frameWidth;
+          offsetY = (frameHeight - croppedFrameHeight) / 2;
+          heightRatio = height / croppedFrameHeight;
         }
-
         /* Returning an object with two functions. */
         return {
           adjustPoint: (point: {x: number; y: number}) => ({
@@ -84,8 +72,8 @@ export const faceBoundsAdjustToView =
             y: (point.y - offsetY) * heightRatio,
           }),
           adjustRect: (rect: Rect) => ({
-            top: (rect.top - offsetY - verticalCropPadding) * heightRatio,
-            left: (rect.left - offsetX - horizontalCropPadding) * widthRatio,
+            top: (rect.top - offsetY - topPadding) * heightRatio,
+            left: (rect.left - offsetX - leftPadding) * widthRatio,
             height: (rect.height + verticalCropPadding) * heightRatio,
             width: (rect.width + horizontalCropPadding) * widthRatio,
           }),
