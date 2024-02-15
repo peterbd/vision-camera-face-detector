@@ -29,6 +29,7 @@ import {
   Camera,
   CameraProps,
   Frame,
+  FrameProcessor,
   PhotoFile,
   TakePhotoOptions,
   useCameraDevices,
@@ -143,8 +144,9 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
   const [hasPermission, setHasPermission] = React.useState(false);
   // camera states
   const devices = useCameraDevices();
+  console.log({devices});
   const direction: 'front' | 'back' = 'front';
-  const device = devices[direction];
+  const device = devices.find(d => d.position === direction) || devices[0];
   const camera = useRef<Camera>(null);
   const [faces, setFaces] = useState<Face[]>([]);
   const {height: screenHeight, width: screenWidth} = useWindowDimensions();
@@ -203,7 +205,8 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
   }, [device]);
 
   /* Using the useFrameProcessor hook to process the video frames. */
-  const frameProcessor = useFrameProcessor(
+
+  const frameProcessor: FrameProcessor = useFrameProcessor(
     frame => {
       'worklet';
       const scannedFaces = scanFaces(frame);
@@ -227,7 +230,7 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
   useEffect(() => {
     (async () => {
       const status = await Camera.requestCameraPermission();
-      setHasPermission(status === 'authorized');
+      setHasPermission(status === 'denied' ? false : true);
     })();
   }, []);
 
@@ -306,12 +309,10 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
         audio={cameraProps?.audio}
         zoom={cameraProps?.zoom}
         enableZoomGesture={cameraProps?.enableZoomGesture}
-        preset={cameraProps?.preset}
         format={cameraProps?.format ?? format}
         fps={cameraProps?.fps ?? 10}
         hdr={cameraProps?.hdr}
         lowLightBoost={cameraProps?.lowLightBoost}
-        colorSpace={cameraProps?.colorSpace}
         videoStabilizationMode={cameraProps?.videoStabilizationMode}
         enableDepthData={cameraProps?.enableDepthData}
         enablePortraitEffectsMatteDelivery={
@@ -320,11 +321,8 @@ const FaceDetector: FC<PropsWithChildren<Props>> = ({
         enableHighQualityPhotos={cameraProps?.enableHighQualityPhotos}
         onError={cameraProps?.onError}
         onInitialized={cameraProps?.onInitialized}
-        onFrameProcessorPerformanceSuggestionAvailable={
-          cameraProps?.onFrameProcessorPerformanceSuggestionAvailable
-        }
         frameProcessor={cameraProps?.frameProcessor ?? frameProcessor}
-        frameProcessorFps={cameraProps?.frameProcessorFps ?? 10}
+        // frameProcessor={cameraProps?.frameProcessor ?? frameProcessor}
       />
       <View style={boundingStyle} testID="faceDetectionBoxView">
         {frameDimensions &&
